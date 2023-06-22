@@ -2,8 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 
-import __dirname from "./utils.js";
+import __dirname from "../utils.js";
 import connect from "./database/connect.js";
+
+import authRouter from "./routes/auth.js";
 
 //configurar env
 dotenv.config();
@@ -14,6 +16,7 @@ app.use(express.static(`${__dirname}/public`));
 app.use(express.urlencoded({ extended: true }));
 
 //routes/
+app.use("/api/", authRouter);
 app.get("/", (req, res) => {
   res.send("test");
 });
