@@ -1,9 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
+
 import cors from "cors";
 
 import __dirname from "../utils.js";
 import connect from "./database/connect.js";
+import initalizePassportStrategies from "./config/passport.config.js";
 
 import authRouter from "./routes/auth.js";
 
@@ -11,9 +13,11 @@ import authRouter from "./routes/auth.js";
 dotenv.config();
 const app = express();
 app.use(cors());
+
 app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(`${__dirname}/public`));
+initalizePassportStrategies();
 
 //routes/
 app.use("/api/", authRouter);

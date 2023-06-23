@@ -1,5 +1,5 @@
 import { usersService } from "../dao/mongo/managers/index.js";
-import { hashPassword, comparePasswords } from "../services/auth.js";
+import { createHash, validatePassword } from "../services/auth.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ export const registerUser = async (req, res) => {
     }
 
     // Generar el hash del password
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await createHash(password);
 
     // Crear un nuevo usuario
     const newUser = {
@@ -48,7 +48,7 @@ export const loginUser = async (req, res) => {
     }
 
     // Verificar la contraseña
-    const passwordMatch = await comparePasswords(password, user.password);
+    const passwordMatch = await validatePassword(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Contraseña incorrecta." });
     }
