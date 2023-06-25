@@ -2,7 +2,7 @@ import { Strategy, ExtractJwt } from "passport-jwt";
 import local from "passport-local";
 import passport from "passport";
 
-import { usersService } from "../dao/mongo/Managers/index.js";
+import { usersService } from "../dao/mongo/managers/index.js";
 import { createHash, validatePassword } from "../services/auth.js";
 
 import { cookieExtractor } from "../../utils.js";

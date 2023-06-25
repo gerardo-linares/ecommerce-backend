@@ -30,8 +30,11 @@ export default class AuthRouter extends BaseRouter {
     );
 
     // Ruta para cerrar sesión
-    this.post("/logout", ["USER", "ADMIN"], (req, res) => {
-      req.logout(() => res.sendSuccess("logout")); // Cerrar sesión utilizando req.logout y enviar respuesta de éxito
+    this.post("/logout", ["USER", "SUPERADMIN"], (req, res) => {
+      req.logout(() => {
+        res.clearCookie("authToken"); // Eliminar la cookie llamada "authToken"
+        res.sendSuccess("Logout exitoso"); // Respuesta de éxito al cerrar sesión
+      });
     });
   }
 }

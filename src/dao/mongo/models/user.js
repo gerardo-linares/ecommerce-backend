@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
-const collection = "Users";
+const usersCollection = "users";
 
-const schema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   first_name: {
     type: String,
     required: true,
@@ -34,6 +34,6 @@ const schema = new mongoose.Schema({
   },
 });
 
-const userModel = mongoose.model(collection, schema);
+const userModel = mongoose.model(usersCollection, userSchema);
 
 export default userModel;

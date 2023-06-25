@@ -14,36 +14,36 @@ export default class BaseRouter {
   get(path, policies, ...callbacks) {
     this.router.get(
       path,
-      this.generateCustomResponses,
-      this.handlePolicies(policies),
       passportCall("jwt", { strategyType: "jwt" }),
+      this.handlePolicies(policies),
+      this.generateCustomResponses,
       this.applyCallbacks(callbacks)
     );
   }
   post(path, policies, ...callbacks) {
     this.router.post(
       path,
-      this.generateCustomResponses,
-      this.handlePolicies(policies),
       passportCall("jwt", { strategyType: "jwt" }),
+      this.handlePolicies(policies),
+      this.generateCustomResponses,
       this.applyCallbacks(callbacks)
     );
   }
   put(path, policies, ...callbacks) {
     this.router.put(
       path,
-      this.generateCustomResponses,
-      this.handlePolicies(policies),
       passportCall("jwt", { strategyType: "jwt" }),
+      this.handlePolicies(policies),
+      this.generateCustomResponses,
       this.applyCallbacks(callbacks)
     );
   }
   delete(path, policies, ...callbacks) {
     this.router.delete(
       path,
-      this.generateCustomResponses,
-      this.handlePolicies(policies),
       passportCall("jwt", { strategyType: "jwt" }),
+      this.handlePolicies(policies),
+      this.generateCustomResponses,
       this.applyCallbacks(callbacks)
     );
   }
@@ -57,6 +57,9 @@ export default class BaseRouter {
       res.status(500).send({ status: "error", error });
     res.sendUnauthorized = (error) =>
       res.status(400).send({ status: "error", error });
+    res.sendBadRequest = (message) => {
+      res.status(400).send({ status: "error", error: message });
+    };
     next();
   };
 

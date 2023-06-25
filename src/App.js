@@ -8,6 +8,8 @@ import connect from "./database/connect.js";
 import initalizePassportStrategies from "./config/passport.config.js";
 
 import AuthRouter from "./routes/auth.js";
+import ProductsRouter from "./routes/products.js";
+import CartsRouter from "./routes/carts.js";
 
 //configurar env
 dotenv.config();
@@ -20,8 +22,12 @@ app.use(express.static(`${__dirname}/public`));
 initalizePassportStrategies();
 
 const authRouter = new AuthRouter();
+const productsRouter = new ProductsRouter();
+const cartsRouter = new CartsRouter();
 //routes/
 app.use("/api/auth", authRouter.getRouter());
+app.use("/api/products", productsRouter.getRouter());
+app.use("/api/carts", cartsRouter.getRouter());
 app.get("/", (req, res) => {
   res.send("test");
 });
