@@ -12,7 +12,7 @@ import {
 
 export default class CartsRouter extends BaseRouter {
   init() {
-    this.get("/", ["SUPERADMIN"], getAllCarts);
+    this.get("/", ["PUBLIC"], getAllCarts);
     this.post("/", ["PUBLIC"], createCart);
     this.get("/:cid", ["PUBLIC"], getCartById);
     this.put("/:cid", ["PUBLIC"], updateCartById);

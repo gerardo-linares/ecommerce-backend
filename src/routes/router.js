@@ -8,7 +8,7 @@ export default class BaseRouter {
   }
 
   init() {}
-  // Este método se puede sobrescribir en las clases hijas para definir rutas adicionales
+
   getRouter = () => this.router;
 
   get(path, policies, ...callbacks) {

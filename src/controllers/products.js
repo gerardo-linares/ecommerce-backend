@@ -5,7 +5,7 @@ export const getProducts = async (req, res) => {
   const { page = 1, category, sort, limit } = req.query;
   const options = {
     page: parseInt(page),
-    limit: parseInt(limit) || 5,
+    limit: parseInt(limit) || 60,
     lean: true,
   };
   const filters = {};
