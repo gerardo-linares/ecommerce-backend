@@ -1,7 +1,7 @@
 import express from "express";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import "./config.js";
 
 import __dirname from "../utils.js";
 import connect from "./database/connect.js";
@@ -11,10 +11,8 @@ import AuthRouter from "./routes/auth.js";
 import ProductsRouter from "./routes/products.js";
 import CartsRouter from "./routes/carts.js";
 
-//configurar env
-dotenv.config();
 const app = express();
-app.use(cors({ origin: "http://127.0.0.1:5173", credentials: true }));
+app.use(cors({ origin: process.env.CORS, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

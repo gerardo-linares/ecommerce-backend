@@ -13,8 +13,8 @@ export default class CartsManager {
   };
 
   // Agregar un nuevo carrito de compras
-  addCart = (carts) => {
-    return cartsModel.create(carts);
+  addCart = () => {
+    return cartsModel.create({ products: [] });
   };
 
   // Agregar un producto al carrito de compras

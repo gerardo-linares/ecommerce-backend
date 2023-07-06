@@ -48,3 +48,13 @@ export const passportCall = (strategy, options = {}) => {
 export const generateToken = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
+
+export const authAddCart = (req, res, next) => {
+  const token = req.cookies["authToken"];
+  if (!token) {
+    return res.status(401).send({ status: "Registrate para continuar" });
+  }
+  const user = jwt.verify(token, process.env.JWT_SECRET);
+  req.user = user;
+  next();
+};

@@ -38,8 +38,10 @@ export default class AuthRouter extends BaseRouter {
       });
       res.sendSuccess("Logout successful");
     });
+
     this.get("/current", ["USER", "SUPERADMIN"], (req, res) => {
-      const currentUser = req.user; // Obtener el usuario actual desde req.user
+      const currentUser = req.user;
+      console.log(currentUser);
       res.sendSuccessWithPayload(currentUser);
     });
   }

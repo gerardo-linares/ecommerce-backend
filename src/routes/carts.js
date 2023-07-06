@@ -9,6 +9,7 @@ import {
   updateProductQuantity,
   deleteProductFromCart,
 } from "../controllers/carts.js";
+import { authAddCart } from "../services/auth.js";
 
 export default class CartsRouter extends BaseRouter {
   init() {
@@ -17,7 +18,7 @@ export default class CartsRouter extends BaseRouter {
     this.get("/:cid", ["PUBLIC"], getCartById);
     this.put("/:cid", ["PUBLIC"], updateCartById);
     this.delete("/:cid", ["PUBLIC"], deleteAllProducts);
-    this.post("/:cid/products/:pid", ["PUBLIC"], addProductToCart);
+    this.post("/:cid/products/:pid", ["PUBLIC"], authAddCart, addProductToCart);
     this.put("/:cid/products/:pid", ["PUBLIC"], updateProductQuantity);
     this.delete("/:cid/products/:pid", ["PUBLIC"], deleteProductFromCart);
   }

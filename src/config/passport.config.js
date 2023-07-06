@@ -2,7 +2,7 @@ import { Strategy, ExtractJwt } from "passport-jwt";
 import local from "passport-local";
 import passport from "passport";
 
-import { usersService } from "../dao/mongo/managers/index.js";
+import { usersService, cartsService } from "../dao/mongo/managers/index.js";
 import { createHash, validatePassword } from "../services/auth.js";
 
 import { cookieExtractor } from "../../utils.js";
@@ -33,8 +33,9 @@ const initializePassportStrategies = () => {
             password: hashedPassword,
             role,
           };
-
           const result = await usersService.createUser(newUser);
+          const cart = await cartsService.addCart();
+          await usersService.updateUser(result._id, { cart: cart._id });
           return done(null, result);
         } catch (error) {
           return done(error);
@@ -51,7 +52,10 @@ const initializePassportStrategies = () => {
       async (email, password, done) => {
         let resultUser;
         try {
-          if (email === "admin@admin.com" && password === "123") {
+          if (
+            email === process.env.ADMIN_EMAIL &&
+            password === process.env.ADMIN_PWD
+          ) {
             // Usuario administrador especial
             resultUser = {
               name: "Admin",
@@ -74,11 +78,12 @@ const initializePassportStrategies = () => {
 
           // El usuario existe y las credenciales son correctas
           resultUser = {
-            name: user.name,
+            name: `${user.first_name} ${user.last_name}`,
             id: user._id,
             role: user.role,
+            cart: user.cart._id,
           };
-
+          console.log(resultUser);
           return done(null, resultUser);
         } catch (error) {
           return done(error);
