@@ -2,8 +2,8 @@ import { Strategy, ExtractJwt } from "passport-jwt";
 import local from "passport-local";
 import passport from "passport";
 
-import { usersService, cartsService } from "../dao/mongo/managers/index.js";
-import { createHash, validatePassword } from "../services/auth.js";
+import { usersService, cartsService } from "../services/repositories.js";
+import { createHash, validatePassword } from "../services/auth.service.js";
 
 import { cookieExtractor } from "../../utils.js";
 
@@ -34,7 +34,7 @@ const initializePassportStrategies = () => {
             role,
           };
           const result = await usersService.createUser(newUser);
-          const cart = await cartsService.addCart();
+          const cart = await cartsService.createCart();
           await usersService.updateUser(result._id, { cart: cart._id });
           return done(null, result);
         } catch (error) {

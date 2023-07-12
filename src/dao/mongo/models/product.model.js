@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       index: true,
     },
-    status: Boolean,
+    status: { type: Boolean, default: false },
     thumbnails: {
       type: [],
       default: [],

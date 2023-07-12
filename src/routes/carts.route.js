@@ -1,6 +1,6 @@
 import BaseRouter from "./router.js";
 import {
-  getAllCarts,
+  getCarts,
   createCart,
   getCartById,
   updateCartById,
@@ -8,12 +8,12 @@ import {
   addProductToCart,
   updateProductQuantity,
   deleteProductFromCart,
-} from "../controllers/carts.js";
-import { authAddCart } from "../services/auth.js";
+} from "../controllers/carts.controller.js";
+import { authAddCart } from "../services/auth.service.js";
 
 export default class CartsRouter extends BaseRouter {
   init() {
-    this.get("/", ["PUBLIC"], getAllCarts);
+    this.get("/", ["SUPERADMIN"], getCarts);
     this.post("/", ["PUBLIC"], createCart);
     this.get("/:cid", ["PUBLIC"], getCartById);
     this.put("/:cid", ["PUBLIC"], updateCartById);

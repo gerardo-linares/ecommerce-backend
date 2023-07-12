@@ -51,6 +51,7 @@ export const generateToken = (user) => {
 
 export const authAddCart = (req, res, next) => {
   const token = req.cookies["authToken"];
+  console.log(token);
   if (!token) {
     return res.status(401).send({ status: "Registrate para continuar" });
   }

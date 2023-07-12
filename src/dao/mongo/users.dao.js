@@ -1,4 +1,4 @@
-import userModel from "../models/user.js";
+import userModel from "./models/user.model.js";
 
 export default class UsersManager {
   getUsers = (params) => {
@@ -13,11 +13,11 @@ export default class UsersManager {
     return userModel.create(user);
   };
 
-  updateUser = (id, user) => {
-    return userModel.findByIdAndUpdate(id, { $set: user });
+  updateUser = (userId, user) => {
+    return userModel.findByIdAndUpdate(userId, { $set: user });
   };
 
-  deleteUser = (id) => {
-    return userModel.findByIdAndDelete(id);
+  deleteUser = (userId) => {
+    return userModel.findByIdAndDelete(userId);
   };
 }

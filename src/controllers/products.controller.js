@@ -1,5 +1,4 @@
-import { productsService } from "../dao/mongo/managers/index.js";
-
+import { productsService } from "../services/repositories.js";
 // links/
 export const getProducts = async (req, res) => {
   const { page = 1, category, sort, limit } = req.query;
@@ -47,8 +46,16 @@ export const getProducts = async (req, res) => {
 
 export const addProduct = async (req, res) => {
   try {
-    const { title, description, price, code, stock, category, thumbnails } =
-      req.body;
+    const {
+      title,
+      description,
+      price,
+      code,
+      stock,
+      category,
+      thumbnails,
+      status,
+    } = req.body;
     const productWithCode = await productsService.getProductByCode({ code });
 
     if (
@@ -57,6 +64,7 @@ export const addProduct = async (req, res) => {
       !price ||
       !code ||
       !stock ||
+      !status ||
       !category ||
       !thumbnails
     ) {
@@ -78,6 +86,7 @@ export const addProduct = async (req, res) => {
       stock,
       category,
       thumbnails,
+      status,
     };
 
     const result = await productsService.addProduct(product);
