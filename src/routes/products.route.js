@@ -5,7 +5,7 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
-} from "../controllers/products.js";
+} from "../controllers/products.controller.js";
 
 export default class ProductsRouter extends BaseRouter {
   init() {

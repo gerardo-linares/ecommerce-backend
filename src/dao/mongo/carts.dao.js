@@ -1,4 +1,4 @@
-import cartsModel from "../models/cart.js";
+import cartsModel from "./models/cart.model.js";
 import mongoose from "mongoose";
 
 export default class CartsManager {
@@ -13,7 +13,7 @@ export default class CartsManager {
   };
 
   // Agregar un nuevo carrito de compras
-  addCart = () => {
+  createCart = () => {
     return cartsModel.create({ products: [] });
   };
 

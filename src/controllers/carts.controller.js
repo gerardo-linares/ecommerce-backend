@@ -1,6 +1,6 @@
-import { cartsService, productsService } from "../dao/mongo/managers/index.js";
+import { productsService, cartsService } from "../services/repositories.js";
 
-export const getAllCarts = async (req, res) => {
+export const getCarts = async (req, res) => {
   try {
     const carts = await cartsService.getCarts();
     res.sendSuccessWithPayload(carts);
@@ -25,7 +25,7 @@ export const createCart = async (req, res) => {
       );
     }
 
-    const newCart = await cartsService.addCart({ name, price });
+    const newCart = await cartsService.createCart({ name, price });
     res.sendSuccessWithPayload(newCart);
   } catch (error) {
     res.sendInternalError(error.message);
@@ -56,7 +56,7 @@ export const updateCartById = async (req, res) => {
 
     // Verificando si los productos existen en la base de datos
     const productIds = updatedProducts.map((product) => product.product);
-    const existingProducts = await productsService.getProducts({
+    const existingProducts = await productsService.getAllProducts({
       _id: { $in: productIds },
     });
 

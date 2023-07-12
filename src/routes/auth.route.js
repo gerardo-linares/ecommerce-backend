@@ -1,4 +1,4 @@
-import { generateToken, passportCall } from "../services/auth.js";
+import { generateToken, passportCall } from "../services/auth.service.js";
 import BaseRouter from "./router.js";
 export default class AuthRouter extends BaseRouter {
   init() {
