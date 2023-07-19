@@ -4,9 +4,9 @@ export const getUsers = async (req, res) => {
   try {
     const params = req.query;
     const users = await usersService.getUsers(params);
-    res.status(200).json(users);
+    res.sendSuccessWithPayload(users);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.sendInternalError("Internal server error");
   }
 };
 
@@ -15,12 +15,12 @@ export const getUserById = async (req, res) => {
     const userId = req.params.uId;
     const user = await usersService.getUserBy({ userId });
     if (user) {
-      res.status(200).json(user);
+      res.sendSuccessWithPayload(user);
     } else {
-      res.status(404).json({ error: "User not found" });
+      res.sendNotFound("User not found");
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.sendInternalError("Internal server error");
   }
 };
 
@@ -30,7 +30,7 @@ export const createUser = async (req, res) => {
     const createdUser = await usersService.createUser(user);
     res.status(201).json(createdUser);
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.sendInternalError("Internal server error");
   }
 };
 
@@ -41,14 +41,14 @@ export const updateUser = async (req, res) => {
     const updatedUser = await usersService.updateUser(userId, user);
     if (updatedUser) {
       res.sendSuccess({
-        message: `El usuario se actualizo correctamente`,
+        message: "El usuario se actualizó correctamente",
         payload: user,
       });
     } else {
-      res.status(404).json({ error: "User not found" });
+      res.sendNotFound("User not found");
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.sendInternalError("Internal server error");
   }
 };
 
@@ -57,11 +57,11 @@ export const deleteUser = async (req, res) => {
     const userId = req.params.uId;
     const deletedUser = await usersService.deleteUser(userId);
     if (deletedUser) {
-      res.status(200).json({ message: "User deleted successfully" });
+      res.sendSuccess({ message: "User deleted successfully" });
     } else {
-      res.status(404).json({ error: "User not found" });
+      res.sendNotFound("User not found");
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    res.sendInternalError("Internal server error");
   }
 };
