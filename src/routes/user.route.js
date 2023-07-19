@@ -8,9 +8,9 @@ import {
 
 export default class UserRouter extends BaseRouter {
   init() {
-    this.get("/", ["SUPERADMIN"], getUsers);
-    this.get("/:uId", ["SUPERADMIN"], getUserById);
-    this.put("/:uId", ["SUPERADMIN"], updateUser);
-    this.delete("/:uId", ["SUPERADMIN"], deleteUser);
+    this.get("/", ["PUBLIC"], getUsers);
+    this.get("/:uId", ["PUBLIC"], getUserById);
+    this.put("/:uId", ["PUBLIC"], updateUser);
+    this.delete("/:uId", ["PUBLIC"], deleteUser);
   }
 }

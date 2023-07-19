@@ -1,4 +1,4 @@
-export default class CartsService {
+export default class CartsRepository {
   constructor(dao) {
     this.dao = dao;
   }

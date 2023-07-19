@@ -26,7 +26,7 @@ export default class AuthRouter extends BaseRouter {
             sameSite: "None",
             secure: true,
           })
-          .sendSuccess("Logged In");
+          .sendSuccessWithPayload(req.user);
       }
     );
 

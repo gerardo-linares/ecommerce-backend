@@ -29,7 +29,7 @@ export const getProducts = async (req, res) => {
     const nextPage = result.nextPage;
     const totalPages = result.totalPages;
 
-    res.sendSuccess({
+    res.sendSuccessWithPayload({
       products,
       page: result.page,
       hasPrevPage,
@@ -90,9 +90,9 @@ export const addProduct = async (req, res) => {
     };
 
     const result = await productsService.addProduct(product);
-    res.sendSuccess({
+    res.sendSuccessWithPayload({
       message: "Producto agregado correctamente",
-      payload: result,
+      result,
     });
   } catch (error) {
     console.log(error);
@@ -105,9 +105,9 @@ export const getProductById = async (req, res) => {
     const productId = req.params.pId;
     const product = await productsService.getProductById(productId);
     if (product) {
-      res.sendSuccess({
+      res.sendSuccessWithPayload({
         message: `El producto '${product.title}', se ha cargado correctamente`,
-        payload: product,
+        product,
       });
     } else {
       res.sendBadRequest("Producto no encontrado");
@@ -127,7 +127,10 @@ export const updateProduct = async (req, res) => {
       productToUpdate
     );
     console.log(result);
-    res.sendSuccess({ message: "Producto actualizado con éxito" });
+    res.sendSuccessWithPayload({
+      message: "Producto actualizado con éxito",
+      result,
+    });
   } catch (error) {
     console.log(error);
     res.sendBadRequest("Producto no encontrado");
@@ -139,7 +142,9 @@ export const deleteProduct = async (req, res) => {
     const productId = req.params.pId;
     const result = await productsService.deleteProduct(productId);
     console.log(result);
-    res.sendSuccess({ message: "Su producto ha sido eliminado con éxito" });
+    res.sendSuccessWithPayload({
+      message: "Su producto ha sido eliminado con éxito",
+    });
   } catch (error) {
     console.error(error);
     res.sendInternalError("Error interno del servidor");

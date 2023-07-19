@@ -1,4 +1,10 @@
-import { productsService, cartsService } from "../services/repositories.js";
+import { generateUniqueCode } from "../../utils.js";
+import {
+  productsService,
+  cartsService,
+  ticketsService,
+  usersService,
+} from "../services/repositories.js";
 
 export const getCarts = async (req, res) => {
   try {
@@ -87,9 +93,9 @@ export const deleteAllProducts = async (req, res) => {
       deleteProducts
     );
 
-    res.sendSuccess({
+    res.sendSuccessWithPayload({
       message: "Productos del carrito eliminados con éxito",
-      payload: deleteAllProducts,
+      deleteAllProducts,
     });
   } catch (error) {
     console.log(error);
@@ -110,9 +116,9 @@ export const addProductToCart = async (req, res) => {
 
     const updatedCart = await cartsService.addProductToCart(cid, pid, quantity);
     if (updatedCart) {
-      res.sendSuccess({
+      res.sendSuccessWithPayload({
         message: `Producto agregado correctamente al carrito '${req.params.cid}'`,
-        payload: updatedCart,
+        updatedCart,
       });
     } else {
       res.sendBadRequest(error.message);
@@ -140,9 +146,9 @@ export const updateProductQuantity = async (req, res) => {
       quantity
     );
     if (updatedProductQuantity) {
-      res.sendSuccess({
+      res.sendSuccessWithPayload({
         message: "Cantidad actualizada correctamente",
-        payload: updatedProductQuantity,
+        updatedProductQuantity,
       });
     } else {
       res.sendBadRequest(error.message);
@@ -170,10 +176,83 @@ export const deleteProductFromCart = async (req, res) => {
       quantity
     );
 
-    res.sendSuccess({
+    res.sendSuccessWithPayload({
       message: "Producto eliminado del carrito con éxito",
-      payload: deletedProduct,
+      deletedProduct,
     });
+  } catch (error) {
+    console.log(error);
+    res.sendInternalError(error.message);
+  }
+};
+
+export const doPurchase = async (req, res) => {
+  try {
+    const cartId = req.params.cid;
+
+    // Obtener el carrito de la base de datos
+    const cart = await cartsService
+      .getCartById(cartId)
+      .populate("products.product");
+    if (!cart) {
+      return res.sendNotFound({ message: "Carrito no encontrado" });
+    }
+
+    // Verificar el stock de cada producto en el carrito
+    const updatedProducts = [];
+    let amount = 0; // Variable para almacenar la suma total de precios
+
+    for (const item of cart.products) {
+      const product = item.product;
+      const quantity = item.quantity;
+
+      // Verificar si hay suficiente stock
+      if (product.stock < quantity) {
+        return res.sendNotFound({
+          message: `No hay suficiente stock para ${product.title} id: ${product.id}`,
+        });
+      }
+
+      // Restar el stock de los productos vendidos
+      product.stock -= quantity;
+      await product.save();
+
+      // Agregar los productos actualizados al carrito
+      updatedProducts.push({
+        product: product._id,
+        quantity: item.quantity,
+      });
+
+      // Calcular el precio total del producto y agregarlo a la suma total
+      const productPrice = product.price;
+      amount += productPrice * quantity;
+    }
+
+    const code = generateUniqueCode();
+
+    // Obtener el usuario comprador del carrito
+    const user = req.user;
+
+    console.log("esto es user:", user);
+    if (!user) {
+      return res.sendNotFound({ message: "Usuario no encontrado" });
+    }
+
+    // Crear un nuevo ticket con el correo electrónico del usuario como comprador
+    const ticket = await ticketsService.createTicket({
+      code,
+      amount,
+      purchaser: user.email,
+    });
+
+    // Guardar el ticket en la colección de tickets
+    await ticket.save();
+
+    // Actualizar el estado del carrito a "comprado" y los productos vendidos
+    cart.products = updatedProducts;
+    await cart.save();
+    const purchaser = user.email;
+    res.sendSuccessWithPayload({ cart, amount, code, purchaser });
   } catch (error) {
     console.log(error);
     res.sendInternalError(error.message);

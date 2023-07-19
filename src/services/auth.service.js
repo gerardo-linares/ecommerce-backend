@@ -49,6 +49,7 @@ export const generateToken = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
+// Middleware de autenticación de usuario para agegar productos al carrito
 export const authAddCart = (req, res, next) => {
   const token = req.cookies["authToken"];
   console.log(token);

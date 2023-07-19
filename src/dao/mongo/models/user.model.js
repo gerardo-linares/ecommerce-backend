@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
     type: mongoose.SchemaTypes.ObjectId,
     ref: "cart",
   },
+
   role: {
     type: String,
     default: "user",
