@@ -12,10 +12,11 @@ import ProductsRouter from "./routes/products.route.js";
 import CartsRouter from "./routes/carts.route.js";
 import UserRouter from "./routes/user.route.js";
 import TicketRouter from "./routes/tickets.route.js";
+import MockPorductsRouter from "./routes/mock.product.route.js";
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CORS,
     credentials: true,
     sameSite: "None",
     secure: true,
@@ -33,12 +34,14 @@ const productsRouter = new ProductsRouter();
 const cartsRouter = new CartsRouter();
 const usersRouter = new UserRouter();
 const ticketsRouter = new TicketRouter();
+const mockProductsRouter = new MockPorductsRouter();
 //routes/
 app.use("/api/auth", authRouter.getRouter());
 app.use("/api/products", productsRouter.getRouter());
 app.use("/api/carts", cartsRouter.getRouter());
 app.use("/api/users", usersRouter.getRouter());
 app.use("/api/tickets", ticketsRouter.getRouter());
+app.use("/api/", mockProductsRouter.getRouter());
 app.get("/", (req, res) => {
   res.send("test");
 });
