@@ -114,11 +114,11 @@ export const addProductToCart = async (req, res) => {
       throw new Error("El Id del producto debe ser mayor que 0.");
     }
 
-    const updatedCart = await cartsService.addProductToCart(cid, pid, quantity);
-    if (updatedCart) {
+    const cart = await cartsService.addProductToCart(cid, pid, quantity);
+    if (cart) {
       res.sendSuccessWithPayload({
         message: `Producto agregado correctamente al carrito '${req.params.cid}'`,
-        updatedCart,
+        cart,
       });
     } else {
       res.sendBadRequest(error.message);
