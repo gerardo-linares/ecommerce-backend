@@ -1,5 +1,12 @@
+import {
+  productAlreadyExistError,
+  productErrorIncompleteValues,
+  productErrorInvalidTypes,
+} from "../constants/products.errors.js";
 import { productsService } from "../services/repositories.js";
-// links/
+import ErrorService from "./../services/error.service.js";
+import { EErrors } from "./../constants/e.errors.js";
+
 export const getProducts = async (req, res) => {
   const { page = 1, category, sort, limit } = req.query;
   const options = {
@@ -59,6 +66,28 @@ export const addProduct = async (req, res) => {
     const productWithCode = await productsService.getProductByCode({ code });
 
     if (
+      typeof title !== "string" ||
+      typeof description !== "string" ||
+      typeof price !== "number" ||
+      typeof code !== "string" ||
+      typeof stock !== "number" ||
+      typeof category !== "string"
+    )
+      ErrorService.createError({
+        name: "Datos invalidos",
+        cause: productErrorInvalidTypes({
+          title,
+          description,
+          price,
+          code,
+          stock,
+          category,
+        }),
+        message: "Error intentando ingresar un producto",
+        code: EErrors.INVALID_VALUES,
+      });
+
+    if (
       !title ||
       !description ||
       !price ||
@@ -68,14 +97,36 @@ export const addProduct = async (req, res) => {
       !category ||
       !thumbnails
     ) {
-      return res.sendBadRequest(
-        "Datos incompletos, por favor, verifica que los datos se estén enviando correctamente"
-      );
+      ErrorService.createError({
+        name: "Datos incompletos",
+        cause: productErrorIncompleteValues({
+          title,
+          description,
+          price,
+          code,
+          stock,
+          category,
+        }),
+        message: "Error intentando ingresar un producto",
+        code: EErrors.INCOMPLETE_VALUES,
+      });
     }
 
     const existingProduct = productWithCode;
     if (existingProduct) {
-      return res.sendBadRequest("El código de producto ya está en uso");
+      ErrorService.createError({
+        name: "Codigo del producto existente",
+        cause: productAlreadyExistError({
+          title,
+          description,
+          price,
+          code,
+          stock,
+          category,
+        }),
+        message: "Error intentando ingresar un producto",
+        code: EErrors.PRODUCT_ALREADY_EXIST,
+      });
     }
 
     const product = {
